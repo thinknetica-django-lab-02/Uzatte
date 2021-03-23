@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ flatpage.title }}</title>
-</head>
-<body>
-<center><h1>E-Commerce #1</h1></center>
-<br>
-<a href = "/about/"> О нас </a><br>
-<a href = "/contacts/"> Контакты </a><br>
-<center><h2>{{ flatpage.title }}</h2></center><br>
+{% extends 'main/base.html' %}
+{%block title %}
+{{ flatpage.title }}
+{% endblock%}
+{% block page_header %}
+{%if flatpage.title %} {{ flatpage.title }} {% else%} Welcome to the best E-Commerce Market!{% endif %}
+{% endblock %}
+{% block page_content%}
 {{ flatpage.content }}
-</body>
-</html>
+{% endblock %}
