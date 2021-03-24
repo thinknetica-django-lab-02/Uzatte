@@ -30,6 +30,7 @@ laptop_category = Category.objects.create(name="Laptops",
 iphone_12_pro.categories.add(phone_category)
 samsung_galaxy_s20.categories.add(phone_category)
 macbook_air_2020.categories.add(laptop_category)
+acer_nitro_5.categories.add(laptop_category)
 
 # Getting different categories via objects.filter() method
 
