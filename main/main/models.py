@@ -27,6 +27,25 @@ class Tag(models.Model):
         verbose_name_plural = 'Тэги'
 
 
+class Category(models.Model):
+    """
+    Class that describes Categories of Goods
+    """
+    name = models.CharField('Название категории', max_length=120, unique=True)
+    description = models.TextField('Описание категории товаров')
+
+    def __str__(self):
+        """
+        Method that return string name of Category
+        :return: str
+        """
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -34,6 +53,8 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
+    # Assume that a good can be in several categories
+    categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
@@ -69,24 +90,3 @@ class Seller(models.Model):
     class Meta:
         verbose_name = 'Продавец'
         verbose_name_plural = 'Продавцы'
-
-
-class Category(models.Model):
-    """
-    Class that describes Categories of Goods
-    """
-    name = models.CharField('Название категории', max_length=120, unique=True)
-    description = models.TextField('Описание категории товаров')
-    # Assume that a good can be in several categories
-    goods = models.ManyToManyField(Good)
-
-    def __str__(self):
-        """
-        Method that return string name of Category
-        :return: str
-        """
-        return self.name
-
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
