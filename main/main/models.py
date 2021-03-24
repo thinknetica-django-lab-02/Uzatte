@@ -53,6 +53,8 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
+    manufacturer = models.CharField('Производитель товара', max_length=120)
+
     # Assume that a good can be in several categories
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag)
