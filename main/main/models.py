@@ -17,7 +17,7 @@ class Tag(models.Model):
 
     def __str__(self):
         """
-        Method that return string name of good
+        Method that return string name of tag
         :return: str
         """
         return self.name
