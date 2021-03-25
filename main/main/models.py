@@ -74,8 +74,11 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
-    category = models.ForeignKey(Category)
-    seller = models.ForeignKey(Seller)
+    # Set PROTECT because delete of category should not entail delete of a good.
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    # Set to CASCADE because delete of seller should entail
+    # delete of all it's goods.
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
