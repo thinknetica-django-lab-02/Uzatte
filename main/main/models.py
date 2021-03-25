@@ -46,6 +46,27 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
 
+class Seller(models.Model):
+    """
+    Class that describes Seller
+    """
+    name = models.CharField('Имя продавца', max_length=120, unique=True)
+    description = models.TextField('Описание продавца')
+    email = models.EmailField('Электронный адрес продавца')
+    address = models.TextField('Адрес продавца')
+
+    def __str__(self):
+        """
+        Method that return string name of Seller
+        :return: str
+        """
+        return self.name
+
+    class Meta:
+        verbose_name = 'Продавец'
+        verbose_name_plural = 'Продавцы'
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -53,8 +74,8 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
-    # Assume that a good can be in several categories
-    categories = models.ManyToManyField(Category)
+    category = models.ForeignKey(Category)
+    seller = models.ForeignKey(Seller)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
@@ -67,26 +88,3 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
-
-
-class Seller(models.Model):
-    """
-    Class that describes Seller
-    """
-    name = models.CharField('Имя продавца', max_length=120, unique=True)
-    description = models.TextField('Описание продавца')
-    email = models.EmailField('Электронный адрес продавца')
-    address = models.TextField('Адрес продавца')
-    goods = models.ManyToManyField(Good)
-    tags = models.ManyToManyField(Tag)
-
-    def __str__(self):
-        """
-        Method that return string name of Seller
-        :return: str
-        """
-        return self.name
-
-    class Meta:
-        verbose_name = 'Продавец'
-        verbose_name_plural = 'Продавцы'
