@@ -46,6 +46,36 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
 
+class Seller(models.Model):
+    """
+    Class that describes Seller
+    """
+    name = models.CharField('Имя продавца', max_length=120, unique=True)
+    description = models.TextField('Описание продавца')
+    email = models.EmailField('Электронный адрес продавца')
+    address = models.TextField('Адрес продавца')
+
+    def __str__(self):
+        """
+        Method that return string name of Seller
+        :return: str
+        """
+        return self.name
+
+    class Meta:
+        verbose_name = 'Продавец'
+        verbose_name_plural = 'Продавцы'
+
+
+class Manufacturer(models.Model):
+    """
+    Class that describes Manufacturer
+    """
+    name = models.CharField('Название производителя', max_length=120,
+                            unique=True)
+    description = models.TextField('Описание Производетеля')
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -53,10 +83,14 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
-    manufacturer = models.CharField('Производитель товара', max_length=120)
-
-    # Assume that a good can be in several categories
-    categories = models.ManyToManyField(Category)
+    # Set PROTECT because delete of category should not entail delete of a good.
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    # Set to CASCADE because delete of seller should entail
+    # delete of all it's goods.
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    # Set to CASCADE because delete of Manufacturer should entail
+    # delete of all it's goods.
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
@@ -69,26 +103,3 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
-
-
-class Seller(models.Model):
-    """
-    Class that describes Seller
-    """
-    name = models.CharField('Имя продавца', max_length=120, unique=True)
-    description = models.TextField('Описание продавца')
-    email = models.EmailField('Электронный адрес продавца')
-    address = models.TextField('Адрес продавца')
-    goods = models.ManyToManyField(Good)
-    tags = models.ManyToManyField(Tag)
-
-    def __str__(self):
-        """
-        Method that return string name of Seller
-        :return: str
-        """
-        return self.name
-
-    class Meta:
-        verbose_name = 'Продавец'
-        verbose_name_plural = 'Продавцы'
