@@ -7,4 +7,9 @@
 {% endblock %}
 {% block page_content%}
 {{ flatpage.content }}
+{% if turn_on_block %}
+<div>
+    <p> Сайт находится в разработке</p>
+</div>
+{% endif %}
 {% endblock %}
