@@ -1,8 +1,9 @@
 {% extends 'main/base.html' %}
 {% load server_time %}
+{% load reverse %}
 {%block title %}
 {{ flatpage.title }}
-{% endblock%}
+{% endblock %}
 {% block page_header %}
 {%if flatpage.title %} {{ flatpage.title }} {% else %} Добро пожаловать на E-Commerce #1{% endif %}
 {% endblock %}
@@ -15,5 +16,8 @@
 {% endif %}
 <div>
     <p> Текущее время сервера: {% server_time %}</p>
+</div>
+<div>
+    <p> {{"Привет, мир!" | reverse }}</p>
 </div>
 {% endblock %}
