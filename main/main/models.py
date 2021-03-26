@@ -67,6 +67,15 @@ class Seller(models.Model):
         verbose_name_plural = 'Продавцы'
 
 
+class Manufacturer(models.Model):
+    """
+    Class that describes Manufacturer
+    """
+    name = models.CharField('Название производителя', max_length=120,
+                            unique=True)
+    description = models.TextField('Описание Производетеля')
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -79,6 +88,9 @@ class Good(models.Model):
     # Set to CASCADE because delete of seller should entail
     # delete of all it's goods.
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    # Set to CASCADE because delete of Manufacturer should entail
+    # delete of all it's goods.
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
