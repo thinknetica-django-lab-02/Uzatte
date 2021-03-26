@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load server_time %}
 {%block title %}
 {{ flatpage.title }}
 {% endblock%}
@@ -9,7 +10,10 @@
 {{ flatpage.content }}
 {% if turn_on_block %}
 <div>
-    <p> Сайт находится в разработке</p>
+    <p> Сайт находится в разаботке</p>
 </div>
 {% endif %}
+<div>
+    <p> Текущее время сервера: {% server_time %}</p>
+</div>
 {% endblock %}
