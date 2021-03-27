@@ -7,4 +7,8 @@ def index(request):
     :param request:
     :return: request, path to template
     """
-    return render(request, 'main/index.html')
+    turn_on_block = True
+    context = {
+        "turn_on_block": turn_on_block,
+    }
+    return render(request, 'main/index.html', context)

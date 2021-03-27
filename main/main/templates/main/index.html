@@ -1,10 +1,23 @@
 {% extends 'main/base.html' %}
+{% load server_time %}
+{% load reverse %}
 {%block title %}
 {{ flatpage.title }}
-{% endblock%}
+{% endblock %}
 {% block page_header %}
 {%if flatpage.title %} {{ flatpage.title }} {% else %} Добро пожаловать на E-Commerce #1{% endif %}
 {% endblock %}
 {% block page_content%}
 {{ flatpage.content }}
+{% if turn_on_block %}
+<div>
+    <p> Сайт находится в разаботке</p>
+</div>
+{% endif %}
+<div>
+    <p> Текущее время сервера: {% server_time %}</p>
+</div>
+<div>
+    <p> {{"Привет, мир!" | reverse }}</p>
+</div>
 {% endblock %}
