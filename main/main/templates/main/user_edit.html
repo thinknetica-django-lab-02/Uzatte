@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% block title %} Профиль {% endblock %}
+{% block page_header %} Профиль {% endblock %}
+{% block page_content %}
+<form method="post">
+    {% csrf_token %}
+<!--    <div class="form-group">-->
+<!--    <label for="name">Имя</label>-->
+<!--    <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Введите имя">-->
+<!--  </div>-->
+<!--    <div class="form-group">-->
+<!--    <label for="Surname">Фамилия</label>-->
+<!--    <input type="text" class="form-control" id="last_name" aria-describedby="emailHelp" placeholder="Введите фамилию">-->
+<!--  </div>-->
+<!--  <div class="form-group">-->
+<!--    <label for="exampleInputEmail1">Email</label>-->
+<!--    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Введите e-mail">-->
+<!--  </div>-->
+    {{form.as_p}}
+  <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}
