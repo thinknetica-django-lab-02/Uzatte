@@ -1,11 +1,11 @@
 {% extends 'main/base.html' %}
 {% load server_time %}
 {% load reverse %}
-{%block title %}
+{% block title %}
 {{ flatpage.title }}
 {% endblock %}
 {% block page_header %}
-{%if flatpage.title %} {{ flatpage.title }} {% else %} Добро пожаловать на E-Commerce #1{% endif %}
+{% if flatpage.title %} {{ flatpage.title }} {% else %} Добро пожаловать на E-Commerce #1{% endif %}
 {% endblock %}
 {% block page_content%}
 {{ flatpage.content }}
