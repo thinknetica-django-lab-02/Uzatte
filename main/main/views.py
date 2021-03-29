@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Good
 
 def index(request):
@@ -16,4 +16,8 @@ def index(request):
 
 
 class GoodList(ListView):
+    model = Good
+
+
+class GoodDetail(DetailView):
     model = Good

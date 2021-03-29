@@ -5,21 +5,15 @@
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">#</th>
         <th scope="col">Наименование товара</th>
-<!--        <th scope="col">Производитель</th>-->
-<!--        <th scope="col">Цена</th>-->
-<!--        <th scope="col">Категория</th>-->
+
     </tr>
     </thead>
     <tbody>
         {% for good in object_list %}
         <tr>
-            <td> {{ good.id }} </td>
-            <td> {{ good.name }} </td>
-<!--            <td> {{ good.manufacturer.name }} </td>-->
-<!--            <td> {{ good.price }} </td>-->
-<!--            <td> {{ good.category }} </td>-->
+            <td><a href = "{{ good.id }}/"> {{ good.name }} </a> </td>
+
         </tr>
         {% endfor %}
 
