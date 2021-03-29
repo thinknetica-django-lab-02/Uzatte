@@ -21,6 +21,7 @@ class GoodList(ListView):
     """
     Generic that displays list of goods
     """
+    paginate_by = 10
     model = Good
 
 
