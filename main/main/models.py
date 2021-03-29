@@ -4,8 +4,8 @@ from django.db import models
 This model constructed on assume that we have abstract goods and particular
 sellers who can sell these goods to clients
 Example:
-    We have an abstract good like "iPhone 12 Pro" and a list of sellers 
-    who can sell it. 
+    We have an abstract good like "iPhone 12 Pro" and a list of sellers
+    who can sell it.
 """
 
 
@@ -83,7 +83,8 @@ class Good(models.Model):
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
     price = models.DecimalField('Цена товара', decimal_places=2, max_digits=10)
-    # Set PROTECT because delete of category should not entail delete of a good.
+    # Set PROTECT because delete of category
+    # should not entail delete of a good.
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     # Set to CASCADE because delete of seller should entail
     # delete of all it's goods.
