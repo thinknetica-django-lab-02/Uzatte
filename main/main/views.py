@@ -16,8 +16,16 @@ def index(request):
 
 
 class GoodList(ListView):
+    """
+    Generic that displays list of goods
+    """
     model = Good
 
 
 class GoodDetail(DetailView):
+    """
+    Generic that displays detailed info
+    about a good
+    url: /good/<pk>/
+    """
     model = Good
