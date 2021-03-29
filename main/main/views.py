@@ -24,6 +24,25 @@ class GoodList(ListView):
     paginate_by = 10
     model = Good
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        # Get filter parameter from url
+        # and passes it got  QuerySet.Filter() method
+        # with walrus operator
+        if query := self.request.GET.get('tag'):
+            return qs.filter(tags__name=query)
+        else:
+            return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('tag') or ""
+        # if query result is None - set it to ""
+        # in order to not pass None as text value
+        # to tag context in HTML Template
+        context['tag'] = query
+        return context
+
 
 class GoodDetail(DetailView):
     """
