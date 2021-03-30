@@ -103,7 +103,7 @@ class Profile(models.Model):
     """
     Class that describes user profile
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         """
