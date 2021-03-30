@@ -24,5 +24,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('goods/', views.GoodList.as_view(), name='goods'),
     path('goods/<pk>/', views.GoodDetail.as_view()),
-    path('accounts/profile/', views.ProfileUpdate.as_view()),
+    path('goods/<pk>/', views.GoodDetail.as_view(), name='good-detail'),
 ]
