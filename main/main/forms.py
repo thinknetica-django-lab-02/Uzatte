@@ -1,11 +1,16 @@
 from django import forms
-from django.contrib.auth.models import User
+from .models import Profile
 
 
 class ProfileForm(forms.ModelForm):
     """
     Form for editing user's profile
     """
+    model = Profile
+    first_name = forms.CharField(max_length=120, label="Имя")
+    last_name = forms.CharField(max_length=120, label="Фамилия")
+    email = forms.CharField(label="email")
+
     class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email',)
+        model = Profile
+        fields = ['first_name', 'last_name', 'email']

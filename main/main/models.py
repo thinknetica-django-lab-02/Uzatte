@@ -1,12 +1,5 @@
 from django.db import models
-
-"""
-This model constructed on assume that we have abstract goods and particular
-sellers who can sell these goods to clients
-Example:
-    We have an abstract good like "iPhone 12 Pro" and a list of sellers
-    who can sell it.
-"""
+from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
@@ -104,3 +97,17 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class Profile(models.Model):
+    """
+    Class that describes user profile
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """
+        Method that return first and last name of a user
+        :return: str
+        """
+        return self.user.first_name + " " + self.user.last_name
