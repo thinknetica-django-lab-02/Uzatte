@@ -103,7 +103,7 @@ class Profile(models.Model):
     """
     Class that describes user profile
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField('Имя пользователя', max_length=120)
     last_name = models.CharField('Фамилия пользователя', max_length=120)
     email = models.EmailField('email адрес пользователя')
