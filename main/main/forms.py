@@ -1,13 +1,9 @@
-from django import forms
+from django.contrib.auth.models import User
+from django.forms.models import inlineformset_factory
+
 from .models import Profile
 
 
-class ProfileForm(forms.ModelForm):
-    """
-    Form for editing user's profile
-    """
-    model = Profile
-
-    class Meta:
-        model = Profile
-        fields = ['first_name', 'last_name', 'email']
+ProfileInlineFormSet = inlineformset_factory(User, Profile, can_delete=False,
+                                             fields=('first_name',
+                                                     'last_name', 'email'))

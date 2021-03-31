@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView, UpdateView
 
-from .forms import ProfileForm
+from .forms import ProfileInlineFormSet
 from .models import Good
+from .models import Profile
 
 
 def index(request):
@@ -59,11 +59,14 @@ class GoodDetail(DetailView):
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
     login_url = "/admin/login/?next=/accounts/profile/"
     model = Profile
-    form_class = ProfileForm
+    form_class = ProfileInlineFormSet
     template_name = 'main/user_edit.html'
     success_url = '/accounts/profile/'
 
     def get_object(self, queryset=None):
         # I don't know if this is correct...
-        user_name = Profile.objects.get(id=self.request.user.id)
+        user_name = Profile.objects.get(user_id=self.request.user.id)
         return user_name
+
+    def get_success_url(self):
+        return self.success_url

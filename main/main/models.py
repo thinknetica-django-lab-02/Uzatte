@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Tag(models.Model):
@@ -99,17 +99,10 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
-class Profile(models.Model):
+class Profile(User):
     """
     Class that describes user profile
     """
-    first_name = models.CharField('Имя', max_length=120)
-    last_name = models.CharField('Фамилия', max_length=120)
-    email = models.EmailField()
-
-    def __str__(self):
-        """
-        Method that return first and last name of a user
-        :return: str
-        """
-        return self.user.first_name + " " + self.user.last_name
+    user = models.OneToOneField(auto_created=True, on_delete=models.CASCADE,
+                                parent_link=True, primary_key=True,
+                                serialize=False, to='auth.user')
