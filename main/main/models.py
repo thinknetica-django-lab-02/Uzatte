@@ -103,7 +103,9 @@ class Profile(models.Model):
     """
     Class that describes user profile
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    first_name = models.CharField('Имя', max_length=120)
+    last_name = models.CharField('Фамилия', max_length=120)
+    email = models.EmailField()
 
     def __str__(self):
         """

@@ -65,5 +65,5 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         # I don't know if this is correct...
-        user_name = Profile.objects.get(user_id=self.request.user.id)
+        user_name = Profile.objects.get(id=self.request.user.id)
         return user_name
