@@ -1,6 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Profile
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, UpdateView
 
+from .forms import ProfileForm
 from .models import Good
 
 
@@ -51,3 +54,16 @@ class GoodDetail(DetailView):
     url: /good/<pk>/
     """
     model = Good
+
+
+class ProfileUpdate(LoginRequiredMixin, UpdateView):
+    login_url = "/admin/login/?next=/accounts/profile/"
+    model = Profile
+    form_class = ProfileForm
+    template_name = 'main/user_edit.html'
+    success_url = '/accounts/profile/'
+
+    def get_object(self, queryset=None):
+        # I don't know if this is correct...
+        user_name = Profile.objects.get(id=self.request.user.id)
+        return user_name
