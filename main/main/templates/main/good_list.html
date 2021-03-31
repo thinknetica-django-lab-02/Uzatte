@@ -6,17 +6,44 @@
     <thead>
     <tr>
         <th scope="col">Наименование товара</th>
+        <th scope="col">Тэги</th>
 
     </tr>
     </thead>
     <tbody>
         {% for good in object_list %}
         <tr>
-            <td><a href = "{{ good.id }}/"> {{ good.name }} </a> </td>
+            <td><a href = "{% url 'good-detail' good.id %}"> {{ good.name }} </a> </td>
+            <td>
+                {% for tag in good.tags.all %}
+                <a href = "{% url 'goods' %}?tag={{tag.name}}"> {{ tag.name }} </a>
+                {% endfor %}
+            </td>
 
         </tr>
         {% endfor %}
 
     </tbody>
 </table>
+    {% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="{% url 'goods' %}?tag={{ tag }}&page={{ page_obj.previous_page_number }}" class = "page-link">Назад</a>
+
+            {% endif %}
+                <a href="{% url 'goods' %}?tag={{ tag }}&page=1" class="page-link">1</a>
+            {% if page_obj.paginator.num_pages > 2 %}
+             <a href="{% url 'goods' %}?tag={{ tag }}&page=2" class="page-link">2</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="{% url 'goods' %}?tag={{ tag }}&page={{ page_obj.paginator.num_pages }}" class="page-link">{{ page_obj.paginator.num_pages }}</a>
+                <a href="{% url 'goods' %}?tag={{ tag }}&page={{ page_obj.next_page_number }}" class="page-link">Вперед</a>
+            {% endif %}
+    </ul>
+    <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+    </span>
+</nav>
+    {% endif %}
 {% endblock %}
