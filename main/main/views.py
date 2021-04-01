@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView, UpdateView
 
-from .forms import ProfileForm
-from .models import Good, Profile
+from .forms import ProfileFormSet, UserForm
+from .models import Good
 
 
 def index(request):
@@ -57,13 +58,40 @@ class GoodDetail(DetailView):
 
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
-    model = Profile
-    form_class = ProfileForm
+    model = User
+    form_class = UserForm
     template_name = 'main/user_edit.html'
     success_url = '/accounts/profile/'
 
-    def get_object(self, queryset=None):
-        # I don't know if this is correct...
-        user_name = Profile.objects.get(user_id=self.request.user.id)
-        return user_name
+    def get_object(self, request):
+        return request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_form'] = ProfileFormSet(
+            instance=self.get_object(kwargs['request']))
+        return context
+
+    def get(self, request, *args, **kwargs):
+
+        self.object = self.get_object(request)
+        return self.render_to_response(self.get_context_data(request=request))
+
+    def form_valid_formset(self, form, formset):
+        if formset.is_valid():
+            formset.save(commit=False)
+            formset.save()
+        else:
+            return HttpResponseRedirect(self.get_success_url())
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        form = self.get_form()
+        profile_form = ProfileFormSet(self.request.POST,
+                                      self.request.FILES, instance=self.object)
+        if form.is_valid():
+            return self.form_valid_formset(form, profile_form)
+        else:
+            return self.form_invalid(form)
