@@ -99,10 +99,15 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
-class Profile(User):
+class Profile(models.Model):
     """
     Class that describes user profile
     """
-    user = models.OneToOneField(auto_created=True, on_delete=models.CASCADE,
-                                parent_link=True, primary_key=True,
-                                serialize=False, to='auth.user')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
+
+    def __str__(self):
+        return self.user.first_name
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'

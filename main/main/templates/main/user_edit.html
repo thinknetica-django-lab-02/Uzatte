@@ -4,7 +4,11 @@
 {% block page_content %}
 <form method="post">
     {% csrf_token %}
-    {{form.as_p}}
-  <button type="submit" class="btn btn-primary">Сохранить</button>
+     {{ form.as_p }}
+    {{ profile_form.management_form }}
+    {% for inline_form in profile_form %}
+        {{ inline_form }}
+    {% endfor %}
+  <button type="submit" class="btn btn-primary">Обновить</button>
 </form>
 {% endblock %}
