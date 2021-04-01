@@ -1,8 +1,10 @@
-from django.db import models
+import datetime
+
+from dateutil.relativedelta import relativedelta
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-import datetime
-from dateutil.relativedelta import relativedelta
+from django.db import models
 
 
 def birth_date(value):
@@ -96,6 +98,7 @@ class Good(models.Model):
     # delete of all it's goods.
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
+    image = models.ImageField(upload_to='img', default='default.png')
 
     def __str__(self):
         """
@@ -114,7 +117,9 @@ class Profile(models.Model):
     Class that describes user profile
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    birth_date = models.DateField('Дата рождения пользователя', validators=[birth_date])
+    birth_date = models.DateField('Дата рождения пользователя',
+                                  validators=[birth_date])
+    image = models.ImageField(upload_to='img', default='default.png')
 
     def __str__(self):
         """
@@ -122,5 +127,3 @@ class Profile(models.Model):
         :return: str
         """
         return self.user.username
-
-
