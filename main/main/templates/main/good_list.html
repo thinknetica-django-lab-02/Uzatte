@@ -13,7 +13,7 @@
     <tbody>
         {% for good in object_list %}
         <tr>
-            <td><a href = "{% url 'goods' %}{{ good.id }}/"> {{ good.name }} </a> </td>
+            <td><a href = "{% url 'good-detail' good.id %}"> {{ good.name }} </a> </td>
             <td>
                 {% for tag in good.tags.all %}
                 <a href = "{% url 'goods' %}?tag={{tag.name}}"> {{ tag.name }} </a>
