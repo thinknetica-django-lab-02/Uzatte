@@ -1,5 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+import datetime
+from dateutil.relativedelta import relativedelta
 
+
+
+def birth_date(value):
+    now_date = datetime.datetime.now().date()
+    difference_in_years = relativedelta(now_date, value).years
+    if difference_in_years < 18:
+        raise ValidationError('Возраст должен быть больше 18 лет')
 
 class Tag(models.Model):
     """
@@ -102,13 +113,13 @@ class Profile(models.Model):
     """
     Class that describes user profile
     """
-    first_name = models.CharField('Имя', max_length=120)
-    last_name = models.CharField('Фамилия', max_length=120)
-    email = models.EmailField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    birth_date = models.DateField('Дата рождения пользователя', validators=[birth_date])
+
 
     def __str__(self):
         """
-        Method that return first and last name of a user
+        Method that return username
         :return: str
         """
-        return self.user.first_name + " " + self.user.last_name
+        return self.user.username
