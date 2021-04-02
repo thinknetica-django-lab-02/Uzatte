@@ -2,10 +2,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from .forms import ProfileFormSet, UserForm
+from .forms import GoodForm, ProfileFormSet, UserForm
 from .models import Good
+
+
 
 
 def index(request):
@@ -58,7 +60,6 @@ class GoodDetail(DetailView):
 
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
     model = User
     form_class = UserForm
     template_name = 'main/user_edit.html'
@@ -96,3 +97,19 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
             return self.form_valid_formset(form, profile_form)
         else:
             return self.form_invalid(form)
+          
+          
+class GoodCreate(LoginRequiredMixin, CreateView):
+    login_url = "/admin/login/?next=/accounts/profile/"
+    model = Good
+    form_class = GoodForm
+    template_name = 'main/good_add.html'
+    success_url = '/goods/'
+
+
+class GoodEdit(LoginRequiredMixin, UpdateView):
+    login_url = "/admin/login/?next=/accounts/profile/"
+    model = Good
+    form_class = GoodForm
+    template_name = 'main/good_edit.html'
+    success_url = '/goods/'

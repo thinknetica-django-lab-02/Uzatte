@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+{% block title %} Добавление товара {% endblock %}
+{% block page_header %} Добавление товара {% endblock %}
+{% block page_content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Добавить</button>
+</form>
+{% endblock %} 
