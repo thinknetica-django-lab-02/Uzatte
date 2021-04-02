@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
-from .models import birth_date
+
 from .models import Good, Profile
+
 
 
 class ProfileForm(forms.ModelForm):
@@ -34,3 +35,4 @@ class GoodForm(forms.ModelForm):
         model = Good
         fields = ('name', 'description', 'price', 'manufacturer',
                   'seller', 'category', 'tags')
+      

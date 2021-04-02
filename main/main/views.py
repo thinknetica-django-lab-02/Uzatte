@@ -111,3 +111,4 @@ class GoodEdit(LoginRequiredMixin, UpdateView):
     form_class = GoodForm
     template_name = 'main/good_edit.html'
     success_url = '/goods/'
+    
