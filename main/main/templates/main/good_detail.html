@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load thumbnail %}
 {% block title %} Список товаров {% endblock %}
 {% block page_content %}
 {% block page_header %} {{ good.name}} {% endblock %}
@@ -8,6 +9,9 @@
     <p class="card-text">{{ good.description }}</p>
   </div>
   <ul class="list-group list-group-flush">
+      {% thumbnail good.image "200x200" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+{% endthumbnail %}
       <li class="list-group-item"><b>Цена:</b> {{ good.price }}</li>
       <li class="list-group-item"><b>Продавец:</b> {{ good.seller }}</li>
       <li class="list-group-item"><b>Категория:</b> {{ good.category }}</li>

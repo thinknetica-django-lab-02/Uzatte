@@ -8,7 +8,7 @@ from .models import Good, Profile
 
 class ProfileForm(forms.ModelForm):
     """
-    Form for editing user's profile
+    Form for editing user's additional profile
     """
     user = forms.CharField(widget=forms.HiddenInput())
 
@@ -18,6 +18,9 @@ class ProfileForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+    """
+        Form for editing user's profile
+        """
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')

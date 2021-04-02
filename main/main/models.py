@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-
 def birth_date(value):
     now_date = datetime.datetime.now().date()
     difference_in_years = relativedelta(now_date, value).years
@@ -98,6 +97,7 @@ class Good(models.Model):
     # delete of all it's goods.
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
+    image = models.ImageField(upload_to='img', default='default.png')
 
     def __str__(self):
         """
@@ -116,7 +116,9 @@ class Profile(models.Model):
     Class that describes user profile
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    birth_date = models.DateField('Дата рождения пользователя', validators=[birth_date])
+    birth_date = models.DateField('Дата рождения пользователя',
+                                  validators=[birth_date])
+    image = models.ImageField(upload_to='img', default='default.png')
 
 
     def __str__(self):

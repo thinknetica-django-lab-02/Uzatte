@@ -9,7 +9,7 @@
     <link href="{% static 'template-styles.css'%}" rel="stylesheet">
 </head>
 <body>
-{% include 'main/header.html' with username='Administrator' %}
+{% include 'main/header.html' with user=request.user %}
 
 <main role="main" class="container">
 
