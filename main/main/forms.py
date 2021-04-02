@@ -27,6 +27,7 @@ ProfileFormSet = inlineformset_factory(User, Profile, fields='__all__',
                                        extra=0, min_num=1, can_delete=False)
 
 
+
 class GoodForm(forms.ModelForm):
     """
     Form for adding and editing Goods
@@ -35,4 +36,4 @@ class GoodForm(forms.ModelForm):
         model = Good
         fields = ('name', 'description', 'price', 'manufacturer',
                   'seller', 'category', 'tags')
-      
+

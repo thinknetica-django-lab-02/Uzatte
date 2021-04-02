@@ -8,6 +8,8 @@ from .forms import GoodForm, ProfileFormSet, UserForm
 from .models import Good
 
 
+
+
 def index(request):
     """
     View that render default template on root url
@@ -95,8 +97,8 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
             return self.form_valid_formset(form, profile_form)
         else:
             return self.form_invalid(form)
-
-
+          
+          
 class GoodCreate(LoginRequiredMixin, CreateView):
     login_url = "/admin/login/?next=/accounts/profile/"
     model = Good
@@ -111,4 +113,3 @@ class GoodEdit(LoginRequiredMixin, UpdateView):
     form_class = GoodForm
     template_name = 'main/good_edit.html'
     success_url = '/goods/'
-    

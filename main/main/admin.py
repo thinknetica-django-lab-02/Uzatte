@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.db import models
+from .models import Profile
 
 from ckeditor.widgets import CKEditorWidget
 
@@ -14,3 +15,4 @@ class FlatPageAdmin(FlatPageAdmin):
 
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
+admin.site.register(Profile)
