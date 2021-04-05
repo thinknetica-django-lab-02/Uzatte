@@ -13,6 +13,7 @@ def birth_date(value):
     if difference_in_years < 18:
         raise ValidationError('Возраст должен быть больше 18 лет')
 
+
 class Tag(models.Model):
     """
     Class that describes Tags
@@ -119,7 +120,6 @@ class Profile(models.Model):
     birth_date = models.DateField('Дата рождения пользователя',
                                   validators=[birth_date])
     image = models.ImageField(upload_to='img', default='default.png')
-
 
     def __str__(self):
         """

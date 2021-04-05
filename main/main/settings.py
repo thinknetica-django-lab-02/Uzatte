@@ -84,6 +84,10 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGOUT_ON_GET = True
 
+
+ACCOUNT_FORMS = {'signup': 'main.forms.CustomSignupForm'}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
