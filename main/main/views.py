@@ -62,6 +62,7 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
     form_class = UserForm
     template_name = 'main/user_edit.html'
     success_url = '/accounts/profile/'
+    login_url = '/accounts/login/'
 
     def get_object(self, request):
         return request.user
