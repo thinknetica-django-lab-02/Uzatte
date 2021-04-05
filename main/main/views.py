@@ -100,7 +100,6 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
 
 
 class GoodCreate(PermissionRequiredMixin, CreateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
     model = Good
     form_class = GoodForm
     template_name = 'main/good_add.html'
@@ -109,7 +108,6 @@ class GoodCreate(PermissionRequiredMixin, CreateView):
 
 
 class GoodEdit(PermissionRequiredMixin, UpdateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
     model = Good
     form_class = GoodForm
     template_name = 'main/good_edit.html'
