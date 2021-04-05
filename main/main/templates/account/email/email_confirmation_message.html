@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение email-адреса на сайте E-Commerce #1</title>
+</head>
+<body>
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% user_display user as user_display %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %} {{ user_display }} Вы получили это пиьсмо потому, что зарегистрировались на сайте {{ site_domain }}.
+
+Для подтверждения регистрации пройдите по ссылке {{ activate_url }}{% endblocktrans %}{% endautoescape %}{% endblock %}
+</body>
+</html>
