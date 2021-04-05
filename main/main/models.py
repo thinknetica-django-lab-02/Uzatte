@@ -8,6 +8,10 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 def birth_date(value):
     now_date = datetime.datetime.now().date()
@@ -136,3 +140,15 @@ class Profile(models.Model):
         if created:
             instance.groups.add(Group.objects.get(name='common users'))
             Profile.objects.create(user_id=instance.id)
+            subject = 'Welcome to E-Commerce #1'
+            context = {
+                "first_name": instance.first_name,
+                "last_name": instance.last_name,
+                "email": instance.email,
+            }
+            html_message = render_to_string('account/hello_mail.html', context)
+            plain_message = strip_tags(html_message)
+            from_email = 'From <one@ecommerce.com>'
+            to = instance.email
+
+            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)

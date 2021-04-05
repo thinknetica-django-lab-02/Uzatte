@@ -28,7 +28,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 SITE_ID = 1
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -83,6 +82,7 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 
 ACCOUNT_FORMS = {'signup': 'main.forms.CustomSignupForm'}
