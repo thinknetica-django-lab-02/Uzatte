@@ -2,6 +2,9 @@
 {% block title %} Список товаров {% endblock %}
 {% block page_content %}
 {% block page_header %} Товары {% endblock %}
+{% if perms.main.add_good %}
+<a style="display:block; text-align: right;" href = "{% url 'good-add' %}"> Добавить товар </a>
+{% endif %}
 <table class="table">
     <thead>
     <tr>
