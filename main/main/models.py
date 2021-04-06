@@ -130,8 +130,9 @@ class Profile(models.Model):
         """
         return self.user.username
 
-    # Set default group to every new user
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            instance.groups.add(Group.objects.get(name='common users'))
+            Profile.objects.create(user_id=instance.id)
+
