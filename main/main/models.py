@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 def birth_date(value):
     now_date = datetime.datetime.now().date()
     difference_in_years = relativedelta(now_date, value).years
@@ -129,7 +130,9 @@ class Profile(models.Model):
         """
         return self.user.username
 
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
             Profile.objects.create(user_id=instance.id)
+
