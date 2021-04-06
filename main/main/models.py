@@ -2,9 +2,11 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 def birth_date(value):
@@ -12,6 +14,7 @@ def birth_date(value):
     difference_in_years = relativedelta(now_date, value).years
     if difference_in_years < 18:
         raise ValidationError('Возраст должен быть больше 18 лет')
+
 
 class Tag(models.Model):
     """
@@ -120,10 +123,15 @@ class Profile(models.Model):
                                   validators=[birth_date])
     image = models.ImageField(upload_to='img', default='default.png')
 
-
     def __str__(self):
         """
         Method that return username
         :return: str
         """
         return self.user.username
+
+    # Set default group to every new user
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            instance.groups.add(Group.objects.get(name='common users'))

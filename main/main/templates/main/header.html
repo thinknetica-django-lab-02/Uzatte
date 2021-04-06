@@ -21,9 +21,13 @@
                       </div>
                     </li>
               </ul>
+              {% if user.is_authenticated %}
               <div class="user-login">
                 <span class="user-name"> {{ user.username }} </span>
-                <a class="nav-link user-exit" href="#">Выход</a>
+                <a class="nav-link user-exit" href="{% url 'account_logout' %}">Выход</a>
+              {% else %}
+                  <a class="nav-link user-exit" href="{% url 'account_login' %}">Войти в систему</a>
+              {% endif %}
               </div>
               <div style="margin-right:10px">
               {% thumbnail user.profile.image "45x45" crop="center" as im %}
