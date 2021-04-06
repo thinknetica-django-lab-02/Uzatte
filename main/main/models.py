@@ -3,12 +3,11 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -87,6 +86,17 @@ class Manufacturer(models.Model):
     description = models.TextField('Описание Производетеля')
 
 
+class Subscriber(models.Model):
+    """
+    Class that describes Subscriber
+    """
+    # We assume that we can have different distribution lists,
+    # like: company_new, new_goods, special_offer and etc
+    name = models.CharField('Название подпискки', max_length=120,
+                            unique=True)
+    user = models.ManyToManyField(User)
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -116,6 +126,28 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+def notify_on_good_create(sender, instance, created, **kwargs):
+    if created:
+        subscribe = Subscriber.objects.get(name="new_goods")
+        subscriber_users = subscribe.user.all()
+        for user in subscriber_users:
+            subject = 'Новый товар!'
+            context = {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "good_name": instance.name,
+            }
+            html_message = render_to_string('account/new_good.html', context)
+            plain_message = strip_tags(html_message)
+            from_email = 'From <one@ecommerce.com>'
+            to = user.email
+            mail.send_mail(subject, plain_message, from_email, [to],
+                           html_message=html_message)
+
+
+post_save.connect(notify_on_good_create, sender=Good)
 
 
 class Profile(models.Model):
@@ -151,4 +183,5 @@ class Profile(models.Model):
             from_email = 'From <one@ecommerce.com>'
             to = instance.email
 
-            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+            mail.send_mail(subject, plain_message, from_email, [to],
+                           html_message=html_message)
