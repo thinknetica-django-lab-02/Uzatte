@@ -133,6 +133,6 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            group, group_created = Group.objects.get_or_create(name='common users')
+            group, _ = Group.objects.get_or_create(name='common users')
             instance.groups.add(group)
             Profile.objects.create(user_id=instance.id)
