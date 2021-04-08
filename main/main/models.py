@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -134,11 +135,12 @@ class Profile(models.Model):
         """
         return self.user.username
 
-    # Set default group to every new user
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            instance.groups.add(Group.objects.get(name='common users'))
+            group, _ = Group.objects.get_or_create(name='common users')
+            instance.groups.add(group)
             Profile.objects.create(user_id=instance.id)
             subject = 'Welcome to E-Commerce #1'
             context = {
@@ -152,3 +154,4 @@ class Profile(models.Model):
             to = instance.email
 
             mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
