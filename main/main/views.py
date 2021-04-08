@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
@@ -98,17 +99,17 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
 
-class GoodCreate(LoginRequiredMixin, CreateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
+class GoodCreate(PermissionRequiredMixin, CreateView):
     model = Good
     form_class = GoodForm
     template_name = 'main/good_add.html'
     success_url = '/goods/'
+    permission_required = ('main.add_good', 'main.view_good')
 
 
-class GoodEdit(LoginRequiredMixin, UpdateView):
-    login_url = "/admin/login/?next=/accounts/profile/"
+class GoodEdit(PermissionRequiredMixin, UpdateView):
     model = Good
     form_class = GoodForm
     template_name = 'main/good_edit.html'
     success_url = '/goods/'
+    permission_required = ('main.change_good', 'main.view_good')

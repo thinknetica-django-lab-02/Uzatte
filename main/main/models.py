@@ -136,3 +136,4 @@ class Profile(models.Model):
             group, _ = Group.objects.get_or_create(name='common users')
             instance.groups.add(group)
             Profile.objects.create(user_id=instance.id)
+

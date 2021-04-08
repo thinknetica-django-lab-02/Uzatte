@@ -25,7 +25,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', views.index, name='index'),
     path('goods/', views.GoodList.as_view(), name='goods'),
-    path('goods/add/', views.GoodCreate.as_view(), name='good_add'),
+    path('goods/add/', views.GoodCreate.as_view(), name='good-add'),
     path('goods/<pk>/', views.GoodDetail.as_view(), name='good-detail'),
     path('goods/<pk>/edit', views.GoodEdit.as_view(), name='good-edit'),
     path('accounts/profile/', views.ProfileUpdate.as_view(), name='profile'),
