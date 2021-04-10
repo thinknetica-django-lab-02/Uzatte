@@ -9,6 +9,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
 
 
@@ -90,11 +91,7 @@ class Subscriber(models.Model):
     """
     Class that describes Subscriber
     """
-    # We assume that we can have different distribution lists,
-    # like: company_new, new_goods, special_offer and etc
-    name = models.CharField('Название подпискки', max_length=120,
-                            unique=True)
-    user = models.ManyToManyField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Good(models.Model):
@@ -115,6 +112,8 @@ class Good(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
     image = models.ImageField(upload_to='img', default='default.png')
+    publish_date = models.DateField('Дата добавление товара в магазин',
+                                    default=timezone.now)
 
     def __str__(self):
         """
@@ -130,21 +129,16 @@ class Good(models.Model):
 
 def notify_on_good_create(sender, instance, created, **kwargs):
     if created:
-        subscribe = Subscriber.objects.get(name="new_goods")
-        subscriber_users = subscribe.user.all()
-        for user in subscriber_users:
-            subject = 'Новый товар!'
-            context = {
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "good_name": instance.name,
-            }
-            html_message = render_to_string('account/new_good.html', context)
-            plain_message = strip_tags(html_message)
-            from_email = 'From <one@ecommerce.com>'
-            to = user.email
-            mail.send_mail(subject, plain_message, from_email, [to],
-                           html_message=html_message)
+        email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+        subject = 'Новый товар!'
+        context = {
+            "good_name": instance.name,
+        }
+        html_message = render_to_string('account/new_good.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = 'From <one@ecommerce.com>'
+        mail.send_mail(subject, plain_message, from_email, email_set,
+                       html_message=html_message)
 
 
 post_save.connect(notify_on_good_create, sender=Good)
@@ -170,7 +164,8 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            instance.groups.add(Group.objects.get(name='common users'))
+            group, _ = Group.objects.get_or_create(name='common users')
+            instance.groups.add(group)
             Profile.objects.create(user_id=instance.id)
             subject = 'Welcome to E-Commerce #1'
             context = {
