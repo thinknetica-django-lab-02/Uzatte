@@ -1,8 +1,11 @@
 import datetime
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
@@ -11,6 +14,7 @@ from django.dispatch import receiver
 
 from django.core import mail
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
 
 
@@ -88,6 +92,13 @@ class Manufacturer(models.Model):
     description = models.TextField('Описание Производетеля')
 
 
+class Subscriber(models.Model):
+    """
+    Class that describes Subscriber
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
 class Good(models.Model):
     """
     Class that describes Goods
@@ -106,6 +117,8 @@ class Good(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
     image = models.ImageField(upload_to='img', default='default.png')
+    publish_date = models.DateField('Дата добавление товара в магазин',
+                                    default=timezone.now)
 
     def __str__(self):
         """
@@ -117,6 +130,23 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+def notify_on_good_create(sender, instance, created, **kwargs):
+    if created:
+        email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+        subject = 'Новый товар!'
+        context = {
+            "good_name": instance.name,
+        }
+        html_message = render_to_string('account/new_good.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = 'From <one@ecommerce.com>'
+        mail.send_mail(subject, plain_message, from_email, email_set,
+                       html_message=html_message)
+
+
+post_save.connect(notify_on_good_create, sender=Good)
 
 
 class Profile(models.Model):
@@ -153,5 +183,30 @@ class Profile(models.Model):
             from_email = 'From <one@ecommerce.com>'
             to = instance.email
 
-            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
+            mail.send_mail(subject, plain_message, from_email, [to],
+                           html_message=html_message)
+
+
+scheduler = BackgroundScheduler()
+
+
+def week_news_notifications():
+    now = datetime.datetime.now()
+    week = datetime.timedelta(days=7)
+    d = now - week
+    goods = Good.objects.filter(publish_date__gte=d)
+    email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+    subject = 'Новый товар!'
+    context = {
+        "goods": goods,
+    }
+    html_message = render_to_string('account/week_mail.html', context)
+    plain_message = strip_tags(html_message)
+    from_email = 'From <one@ecommerce.com>'
+    mail.send_mail(subject, plain_message, from_email, email_set,
+                   html_message=html_message)
+
+
+scheduler.add_job(week_news_notifications, 'cron', week='*')
+scheduler.start()

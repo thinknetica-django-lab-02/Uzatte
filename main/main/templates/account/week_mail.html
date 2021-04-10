@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Новый товар на нашей площадке!</title>
+</head>
+<body>
+<p> На нашей площадке появились новые товары товары:</p>
+<ul>
+    {% for good in goods %}
+    <li> {{ good.name }} </li>
+{% endfor %}
+</ul>
+</body>
+</html>
