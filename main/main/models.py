@@ -93,11 +93,7 @@ class Subscriber(models.Model):
     """
     Class that describes Subscriber
     """
-    # We assume that we can have different distribution lists,
-    # like: company_new, new_goods, special_offer and etc
-    name = models.CharField('Название подпискки', max_length=120,
-                            unique=True)
-    user = models.ManyToManyField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Good(models.Model):
@@ -135,21 +131,16 @@ class Good(models.Model):
 
 def notify_on_good_create(sender, instance, created, **kwargs):
     if created:
-        subscribe = Subscriber.objects.get(name="new_goods")
-        subscriber_users = subscribe.user.all()
-        for user in subscriber_users:
-            subject = 'Новый товар!'
-            context = {
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "good_name": instance.name,
-            }
-            html_message = render_to_string('account/new_good.html', context)
-            plain_message = strip_tags(html_message)
-            from_email = 'From <one@ecommerce.com>'
-            to = user.email
-            mail.send_mail(subject, plain_message, from_email, [to],
-                           html_message=html_message)
+        email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+        subject = 'Новый товар!'
+        context = {
+            "good_name": instance.name,
+        }
+        html_message = render_to_string('account/new_good.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = 'From <one@ecommerce.com>'
+        mail.send_mail(subject, plain_message, from_email, email_set,
+                       html_message=html_message)
 
 
 post_save.connect(notify_on_good_create, sender=Good)
@@ -196,25 +187,20 @@ scheduler = BackgroundScheduler()
 
 
 def week_news_notifications():
-    n = datetime.datetime.now()
+    now = datetime.datetime.now()
     week = datetime.timedelta(days=7)
-    d = n - week
+    d = now - week
     goods = Good.objects.filter(publish_date__gte=d)
-    subscribe = Subscriber.objects.get(name="new_goods")
-    subscribers = subscribe.user.all()
-    for user in subscribers:
-        subject = 'Новый товар!'
-        context = {
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "goods": goods,
-        }
-        html_message = render_to_string('account/week_mail.html', context)
-        plain_message = strip_tags(html_message)
-        from_email = 'From <one@ecommerce.com>'
-        to = user.email
-        mail.send_mail(subject, plain_message, from_email, [to],
-                       html_message=html_message)
+    email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+    subject = 'Новый товар!'
+    context = {
+        "goods": goods,
+    }
+    html_message = render_to_string('account/week_mail.html', context)
+    plain_message = strip_tags(html_message)
+    from_email = 'From <one@ecommerce.com>'
+    mail.send_mail(subject, plain_message, from_email, email_set,
+                   html_message=html_message)
 
 
 scheduler.add_job(week_news_notifications, 'cron', week='*')
