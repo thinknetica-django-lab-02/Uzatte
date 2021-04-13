@@ -1,11 +1,9 @@
 import datetime
 
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
-from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
@@ -187,26 +185,3 @@ class Profile(models.Model):
             mail.send_mail(subject, plain_message, from_email, [to],
                            html_message=html_message)
 
-
-scheduler = BackgroundScheduler()
-
-
-def week_news_notifications():
-    now = datetime.datetime.now()
-    week = datetime.timedelta(days=7)
-    d = now - week
-    goods = Good.objects.filter(publish_date__gte=d)
-    email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
-    subject = 'Новый товар!'
-    context = {
-        "goods": goods,
-    }
-    html_message = render_to_string('account/week_mail.html', context)
-    plain_message = strip_tags(html_message)
-    from_email = 'From <one@ecommerce.com>'
-    mail.send_mail(subject, plain_message, from_email, email_set,
-                   html_message=html_message)
-
-
-scheduler.add_job(week_news_notifications, 'cron', week='*')
-scheduler.start()
