@@ -12,6 +12,8 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
 
+from .tasks import send_mail_notification
+
 
 def birth_date(value):
     now_date = datetime.datetime.now().date()
@@ -127,10 +129,11 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
+@receiver(post_save, sender=Good)
 def notify_on_good_create(sender, instance, created, **kwargs):
     if created:
-        email_set = {subscriber.user.email for subscriber
-                     in Subscriber.objects.all()}
+        email_set = [subscriber.user.email for subscriber
+                     in Subscriber.objects.all()]
         subject = 'Новый товар!'
         context = {
             "good_name": instance.name,
@@ -138,11 +141,8 @@ def notify_on_good_create(sender, instance, created, **kwargs):
         html_message = render_to_string('account/new_good.html', context)
         plain_message = strip_tags(html_message)
         from_email = 'From <one@ecommerce.com>'
-        mail.send_mail(subject, plain_message, from_email, email_set,
-                       html_message=html_message)
-
-
-post_save.connect(notify_on_good_create, sender=Good)
+        send_mail_notification.delay(subject, plain_message, from_email,
+                                     email_set, html_message=html_message)
 
 
 class Profile(models.Model):
