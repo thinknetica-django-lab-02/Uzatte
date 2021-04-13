@@ -1,16 +1,13 @@
 import datetime
 
-
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-
-from django.core import mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
@@ -132,7 +129,8 @@ class Good(models.Model):
 
 def notify_on_good_create(sender, instance, created, **kwargs):
     if created:
-        email_set = {subscriber.user.email for subscriber in Subscriber.objects.all()}
+        email_set = {subscriber.user.email for subscriber
+                     in Subscriber.objects.all()}
         subject = 'Новый товар!'
         context = {
             "good_name": instance.name,
@@ -163,7 +161,6 @@ class Profile(models.Model):
         """
         return self.user.username
 
-
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
@@ -181,7 +178,5 @@ class Profile(models.Model):
             from_email = 'From <one@ecommerce.com>'
             to = instance.email
 
-
             mail.send_mail(subject, plain_message, from_email, [to],
                            html_message=html_message)
-
