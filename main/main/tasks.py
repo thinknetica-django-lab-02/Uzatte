@@ -28,6 +28,7 @@ def week_news_notifications():
                    html_message=html_message)
 
 
+# Send mail for every new good
 @celery_app.task
 def send_mail_notification(subject, plain_message, from_email, email_set,
                            html_message):
