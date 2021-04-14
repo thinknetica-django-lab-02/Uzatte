@@ -1,5 +1,7 @@
 import datetime
+import random
 
+from django.contrib.auth.models import User
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -7,6 +9,7 @@ from django.utils.html import strip_tags
 import main.models as models
 
 from .celery import app as celery_app
+from .sms import send_sms
 
 
 @celery_app.task
@@ -34,3 +37,12 @@ def send_mail_notification(subject, plain_message, from_email, email_set,
                            html_message):
     mail.send_mail(subject, plain_message, from_email, email_set,
                    html_message=html_message)
+
+
+@celery_app.task
+def send_phone_code(phone_number, user_id):
+    number = random.randint(1000, 9999)
+    status = send_sms(phone_number, number)
+    sms = models.SMSlog.objects.create(code=number, status=status)
+    user = User.objects.get(id=user_id)
+    user.smslog_set.add(sms)

@@ -2,11 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import GoodForm, ProfileFormSet, UserForm
 from .models import Good
+from .tasks import send_phone_code
 
 
 def index(request):
@@ -75,7 +77,6 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
         return context
 
     def get(self, request, *args, **kwargs):
-
         self.object = self.get_object(request)
         return self.render_to_response(self.get_context_data(request=request))
 
@@ -113,3 +114,23 @@ class GoodEdit(PermissionRequiredMixin, UpdateView):
     template_name = 'main/good_edit.html'
     success_url = '/goods/'
     permission_required = ('main.change_good', 'main.view_good')
+
+
+def phone_number_confirmation(request):
+    """
+    Function for confirmation user phone number
+    User can do it at amy moment in his profile
+    """
+    user = request.user
+    user_id = user.id
+    phone_number = str(user.profile.phone_number)
+    confirmation_flag = user.profile.phone_confirmed
+    if not confirmation_flag and phone_number:
+        send_phone_code.delay(phone_number, user_id)
+        confirm_message = "We sent 4 digit code to your phone"
+        request.session['confirm_message'] = confirm_message
+        return redirect('profile')
+    else:
+        confirm_message = 'You have already confirmed you phone number'
+        request.session['confirm_message'] = confirm_message
+        return redirect('profile')

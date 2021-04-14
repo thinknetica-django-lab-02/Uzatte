@@ -29,4 +29,6 @@ urlpatterns = [
     path('goods/<pk>/', views.GoodDetail.as_view(), name='good-detail'),
     path('goods/<pk>/edit', views.GoodEdit.as_view(), name='good-edit'),
     path('accounts/profile/', views.ProfileUpdate.as_view(), name='profile'),
+    path('accounts/profile/phone_confirm', views.phone_number_confirmation,
+         name='phone-confirm'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
