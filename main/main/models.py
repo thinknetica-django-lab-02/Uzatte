@@ -14,6 +14,8 @@ from django.utils.html import strip_tags
 
 from .tasks import send_mail_notification
 
+from phone_field import PhoneField
+
 
 def birth_date(value):
     now_date = datetime.datetime.now().date()
@@ -151,8 +153,10 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField('Дата рождения пользователя',
-                                  validators=[birth_date])
+                                  validators=[birth_date], blank=True)
     image = models.ImageField(upload_to='img', default='default.png')
+    phone_number = PhoneField('Номер телефона пользователя', blank=True)
+    phone_confirmed = models.PositiveIntegerField('Флаг подтверждения телефона')
 
     def __str__(self):
         """
@@ -180,3 +184,15 @@ class Profile(models.Model):
 
             mail.send_mail(subject, plain_message, from_email, [to],
                            html_message=html_message)
+
+
+class SMSlog(models.Model):
+    """
+    Class that describer sms codes and their status
+    We can have many codes on one user if he didn't response
+    on first one and request another.
+    """
+    code = models.PositiveIntegerField('Код подтверждения')
+    status = models.CharField('Статус ответа сервера', max_length=14)
+    user = models.ManyToManyField(User)
+
