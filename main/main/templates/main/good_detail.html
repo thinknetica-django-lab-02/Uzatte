@@ -3,6 +3,7 @@
 {% block title %} Список товаров {% endblock %}
 {% block page_content %}
 {% block page_header %} {{ good.name}} {% endblock %}
+{% load cache %}
 <div class="card" style="width: 18rem;">
   <div class="card-body">
     <h5 class="card-title">{{ good.name }}</h5>
@@ -20,4 +21,5 @@
       {% endif %}
   </ul>
 </div>
+<p> Счетчик просмотра: {{ obj_count }}</p>
 {% endblock %}
