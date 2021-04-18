@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -58,6 +59,16 @@ class GoodDetail(DetailView):
     url: /good/<pk>/
     """
     model = Good
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        obj_count_key = f"object_{obj.id}_count"
+        obj_count = cache.get(obj_count_key, 0)
+        obj_count += 1
+        cache.set(obj_count_key, obj_count, timeout=60)
+        context['obj_count'] = obj_count
+        return context
 
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
