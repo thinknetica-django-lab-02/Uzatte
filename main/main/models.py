@@ -153,10 +153,10 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField('Дата рождения пользователя',
-                                  validators=[birth_date], blank=True)
-    image = models.ImageField(upload_to='img', default='default.png')
+                                  validators=[birth_date], blank=True, null=True)
+    image = models.ImageField(upload_to='img', default='default.png', null=True)
     phone_number = PhoneField('Номер телефона пользователя', blank=True)
-    phone_confirmed = models.PositiveIntegerField('Флаг подтверждения телефона')
+    phone_confirmed = models.PositiveIntegerField('Флаг подтверждения телефона', default=0)
 
     def __str__(self):
         """
