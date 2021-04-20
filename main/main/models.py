@@ -18,6 +18,9 @@ from .tasks import send_mail_notification
 
 
 def birth_date(value):
+    """
+    Functions that validate birth_date of User
+    """
     now_date = datetime.datetime.now().date()
     difference_in_years = relativedelta(now_date, value).years
     if difference_in_years < 18:
@@ -26,7 +29,9 @@ def birth_date(value):
 
 class Tag(models.Model):
     """
-    Class that describes Tags
+    Class that describes Tags. Tag is an identifier for categorizing,
+    describing, searching for data,
+    and setting the internal structure
     """
     name = models.CharField('Имя тэга', max_length=50, unique=True)
 
@@ -44,7 +49,9 @@ class Tag(models.Model):
 
 class Category(models.Model):
     """
-    Class that describes Categories of Goods
+    Class that describes Categories of Goods.
+    Categories are logical containers that store
+    goods with similar properties
     """
     name = models.CharField('Название категории', max_length=120, unique=True)
     description = models.TextField('Описание категории товаров')
@@ -63,7 +70,8 @@ class Category(models.Model):
 
 class Seller(models.Model):
     """
-    Class that describes Seller
+    Class that describes Seller. Seller is
+    an entity that can be distributor of a good
     """
     name = models.CharField('Имя продавца', max_length=120, unique=True)
     description = models.TextField('Описание продавца')
@@ -84,7 +92,9 @@ class Seller(models.Model):
 
 class Manufacturer(models.Model):
     """
-    Class that describes Manufacturer
+    Class that describes Manufacturer.
+    Manufacturer is a entity that manufactured a
+    particular good
     """
     name = models.CharField('Название производителя', max_length=120,
                             unique=True)
@@ -93,14 +103,17 @@ class Manufacturer(models.Model):
 
 class Subscriber(models.Model):
     """
-    Class that describes Subscriber
+    Class that describes Subscriber.
+    Subscriber is a person who want to
+    receive mails from Store
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class Good(models.Model):
     """
-    Class that describes Goods
+    Class that describes Goods.
+    Good is a main entity. Goods are sellable items.
     """
     name = models.CharField('Наименование товара', max_length=120, unique=True)
     description = models.TextField('Описание товара')
@@ -133,6 +146,10 @@ class Good(models.Model):
 
 @receiver(post_save, sender=Good)
 def notify_on_good_create(sender, instance, created, **kwargs):
+    """
+    Function that send a new mail to Subscriber list
+    when a new good created in the store.
+    """
     if created:
         email_set = [subscriber.user.email for subscriber
                      in Subscriber.objects.all()]
@@ -149,7 +166,8 @@ def notify_on_good_create(sender, instance, created, **kwargs):
 
 class Profile(models.Model):
     """
-    Class that describes user profile
+    Class that describes user profile. Extends
+    standard user profile with additional fields
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField('Дата рождения пользователя',
@@ -171,6 +189,10 @@ class Profile(models.Model):
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
+        """
+        Function that create user extended user profile and connect it to
+        every new user.
+        """
         if created:
             group, _ = Group.objects.get_or_create(name='common users')
             instance.groups.add(group)
