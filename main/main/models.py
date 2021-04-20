@@ -12,9 +12,9 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from .tasks import send_mail_notification
-
 from phone_field import PhoneField
+
+from .tasks import send_mail_notification
 
 
 def birth_date(value):
@@ -153,10 +153,14 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField('Дата рождения пользователя',
-                                  validators=[birth_date], blank=True, null=True)
-    image = models.ImageField(upload_to='img', default='default.png', null=True)
-    phone_number = PhoneField('Номер телефона пользователя', blank=True)
-    phone_confirmed = models.PositiveIntegerField('Флаг подтверждения телефона', default=0)
+                                  validators=[birth_date],
+                                  blank=True, null=True)
+    image = models.ImageField(upload_to='img', default='default.png',
+                              null=True)
+    phone_number = PhoneField('Номер телефона пользователя',
+                              blank=True)
+    phone_confirmed = models.PositiveIntegerField(
+        'Флаг подтверждения телефона', default=0)
 
     def __str__(self):
         """
@@ -195,4 +199,3 @@ class SMSlog(models.Model):
     code = models.PositiveIntegerField('Код подтверждения')
     status = models.CharField('Статус ответа сервера', max_length=14)
     user = models.ManyToManyField(User)
-
