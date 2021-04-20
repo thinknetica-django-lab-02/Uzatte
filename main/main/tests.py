@@ -1,9 +1,9 @@
-from django.test import TestCase
-from django.test import Client
-from django.urls import reverse
-from .models import Category, Good, Manufacturer, Seller
-from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from .models import Category, Good, Manufacturer, Seller
 
 c = Client()
 
@@ -36,7 +36,7 @@ class GoodDetailTestCase(TestCase):
                                             email="test@test.com",
                                             address="test"
                                         ),
-                                        manufacturer = Manufacturer.objects.create(
+                                        manufacturer=Manufacturer.objects.create(
                                             name="test",
                                             description="test",
                                         )

@@ -1,8 +1,10 @@
-from django.urls import reverse
-import pytest
-from main.models import Category, Good, Seller, Manufacturer
-from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
+from django.urls import reverse
+
+from main.models import Category, Good, Manufacturer, Seller
+
+import pytest
 
 
 @pytest.mark.parametrize('param', [
