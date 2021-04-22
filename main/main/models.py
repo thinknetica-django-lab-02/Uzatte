@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group, User
 from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.loader import render_to_string
@@ -17,7 +18,7 @@ from phone_field import PhoneField
 from .tasks import send_mail_notification
 
 
-def birth_date(value):
+def birth_date(value: datetime.date) -> None:
     """
     Functions that validate birth_date of User
     """
@@ -145,7 +146,8 @@ class Good(models.Model):
 
 
 @receiver(post_save, sender=Good)
-def notify_on_good_create(sender, instance, created, **kwargs):
+def notify_on_good_create(sender: Model, instance,
+                          created: bool, **kwargs) -> None:
     """
     Function that send a new mail to Subscriber list
     when a new good created in the store.
@@ -188,7 +190,8 @@ class Profile(models.Model):
         return self.user.username
 
     @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
+    def create_user_profile(self, sender: Model, instance,
+                            created: bool, **kwargs) -> None:
         """
         Function that create user extended user profile and connect it to
         every new user.
