@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
 from django.core import mail
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import models
 from django.db.models import Model
 from django.db.models.signals import post_save
@@ -17,6 +17,7 @@ from phone_field import PhoneField
 
 from .tasks import send_mail_notification
 
+from asgiref.sync import sync_to_async
 
 def birth_date(value: datetime.date) -> None:
     """
@@ -132,6 +133,7 @@ class Good(models.Model):
     image = models.ImageField(upload_to='img', default='default.png')
     publish_date = models.DateField('Дата добавление товара в магазин',
                                     default=timezone.now)
+    in_stock = models.PositiveIntegerField('В наличии', default=1)
 
     def __str__(self):
         """
@@ -139,6 +141,7 @@ class Good(models.Model):
         :return: str
         """
         return self.name
+
 
     class Meta:
         verbose_name = 'Товар'
@@ -224,3 +227,16 @@ class SMSlog(models.Model):
     code = models.PositiveIntegerField('Код подтверждения')
     status = models.CharField('Статус ответа сервера', max_length=14)
     user = models.ManyToManyField(User)
+
+
+@sync_to_async
+def get_good_amount(name):
+    try:
+        in_stock = Good.objects.get(name=name).in_stock
+        if in_stock > 0:
+            message = f"This are {in_stock} units of {name} left in stock"
+        if in_stock == 0:
+            message = f"The good {name } is out of stock"
+    except ObjectDoesNotExist:
+        message = f"This is no such good as {name}"
+    return message

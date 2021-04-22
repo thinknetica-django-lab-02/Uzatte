@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'phone_field',
     'django_redis',
+    'channels',
+
 ]
 
 MIDDLEWARE = [
@@ -86,6 +88,19 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGOUT_ON_GET = True
+
+
+# Конфигурация Channels
+ASGI_APPLICATION = "main.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("localhost", 6379)],
+
+        },
+    },
+}
 
 
 ACCOUNT_FORMS = {'signup': 'main.forms.CustomSignupForm'}
