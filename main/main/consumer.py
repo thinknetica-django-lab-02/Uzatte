@@ -9,10 +9,10 @@ from .models import get_good_amount
 
 class LiveScoreConsumer(AsyncWebsocketConsumer):
     groups = ['boradvase']
+
     async def connect(self):
         print("accept")
         await self.accept()
-
 
     async def receive(self, text_data):
 
