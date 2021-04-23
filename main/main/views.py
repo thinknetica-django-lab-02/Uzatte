@@ -1,8 +1,13 @@
+from typing import Any, Dict, Union
+
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser, User
 from django.core.cache import cache
-from django.http.response import HttpResponseRedirect
+from django.db.models import QuerySet
+from django.http import HttpRequest
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -12,7 +17,7 @@ from .models import Good
 from .tasks import send_phone_code
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     """
     View that render default template on root url
     :param request:
@@ -32,7 +37,7 @@ class GoodList(ListView):
     paginate_by = 10
     model = Good
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         # Get filter parameter from url
         # and passes it got  QuerySet.Filter() method
@@ -42,7 +47,7 @@ class GoodList(ListView):
         else:
             return qs
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict:
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('tag') or ""
         # if query result is None - set it to ""
@@ -60,11 +65,11 @@ class GoodDetail(DetailView):
     """
     model = Good
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict:
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
-        obj_count_key = f"object_{obj.id}_count"
-        obj_count = cache.get(obj_count_key, 0)
+        obj_count_key: str = f"object_{obj.pk}_count"
+        obj_count: int = cache.get(obj_count_key, 0)
         obj_count += 1
         cache.set(obj_count_key, obj_count, timeout=60)
         context['obj_count'] = obj_count
@@ -74,24 +79,25 @@ class GoodDetail(DetailView):
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserForm
-    template_name = 'main/user_edit.html'
-    success_url = '/accounts/profile/'
-    login_url = '/accounts/login/'
+    template_name: str = 'main/user_edit.html'
+    success_url: str = '/accounts/profile/'
+    login_url: str = '/accounts/login/'
 
-    def get_object(self, request):
+    def get_object(self, request: HttpRequest) -> Union[AbstractBaseUser,
+                                                        AnonymousUser]:
         return request.user
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict:
         context = super().get_context_data(**kwargs)
         context['profile_form'] = ProfileFormSet(
             instance=self.get_object(kwargs['request']))
         return context
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object(request)
         return self.render_to_response(self.get_context_data(request=request))
 
-    def form_valid_formset(self, form, formset):
+    def form_valid_formset(self, form: Any, formset: Any) -> HttpResponse:
         if formset.is_valid():
             formset.save(commit=False)
             formset.save()
@@ -100,7 +106,7 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
         form.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object(request)
         form = self.get_form()
         profile_form = ProfileFormSet(self.request.POST,
@@ -114,9 +120,9 @@ class ProfileUpdate(LoginRequiredMixin, UpdateView):
 class GoodCreate(PermissionRequiredMixin, CreateView):
     model = Good
     form_class = GoodForm
-    template_name = 'main/good_add.html'
-    success_url = '/goods/'
-    permission_required = ('main.add_good', 'main.view_good')
+    template_name: str = 'main/good_add.html'
+    success_url: str = '/goods/'
+    permission_required: tuple = ('main.add_good', 'main.view_good')
 
 
 class GoodEdit(PermissionRequiredMixin, UpdateView):
@@ -127,13 +133,13 @@ class GoodEdit(PermissionRequiredMixin, UpdateView):
     permission_required = ('main.change_good', 'main.view_good')
 
 
-def phone_number_confirmation(request):
+def phone_number_confirmation(request: HttpRequest) -> HttpResponse:
     """
     Function for confirmation user phone number
     User can do it at amy moment in his profile
     """
     user = request.user
-    user_id = user.id
+    user_id = user.pk
     phone_number = str(user.profile.phone_number)
     confirmation_flag = user.profile.phone_confirmed
     if not confirmation_flag and phone_number:
