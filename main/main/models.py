@@ -148,7 +148,7 @@ class Good(models.Model):
         verbose_name_plural = 'Товары'
 
 
-@receiver(post_save, sender=Good)
+#@receiver(post_save, sender=Good)
 def notify_on_good_create(sender: Model, instance,
                           created: bool, **kwargs) -> None:
     """
@@ -192,8 +192,8 @@ class Profile(models.Model):
         """
         return self.user.username
 
-    @receiver(post_save, sender=User)
-    def create_user_profile(self, sender: Model, instance,
+    #@receiver(post_save, sender=User)
+    def create_user_profile(sender: Model, instance,
                             created: bool, **kwargs) -> None:
         """
         Function that create user extended user profile and connect it to
@@ -229,7 +229,7 @@ class SMSlog(models.Model):
     user = models.ManyToManyField(User)
 
 
-@sync_to_async
+#@sync_to_async
 def get_good_amount(name):
     try:
         in_stock = Good.objects.get(name=name).in_stock
