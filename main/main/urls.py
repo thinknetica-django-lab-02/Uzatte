@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', views.index, name='index'),
-    path('goods/', views.GoodList.as_view(),
+    path('goods/', cache_page(CACHE_TTL)(views.GoodList.as_view()),
          name='goods'),
     path('goods/add/', views.GoodCreate.as_view(), name='good-add'),
     path('goods/<pk>/', views.GoodDetail.as_view(), name='good-detail'),

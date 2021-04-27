@@ -1,10 +1,12 @@
 import datetime
 
+from asgiref.sync import sync_to_async
+
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
 from django.core import mail
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.db.models import Model
 from django.db.models.signals import post_save
@@ -17,7 +19,6 @@ from phone_field import PhoneField
 
 from .tasks import send_mail_notification
 
-from asgiref.sync import sync_to_async
 
 def birth_date(value: datetime.date) -> None:
     """

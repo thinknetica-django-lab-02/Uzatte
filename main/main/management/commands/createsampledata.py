@@ -9,11 +9,11 @@ class Command(BaseCommand):
     Management command for creating sample data
     """
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser) -> None:
         parser.add_argument('model', nargs=1, type=str)
         parser.add_argument('good_name', nargs=1, type=str)
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options) -> None:
         acceptable_models = ['good', 'seller']
         model = options['model'][0]
         object_name = options['good_name'][0]

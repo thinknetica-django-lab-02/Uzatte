@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
-from .models import Profile, Good, GoodProxy
+from .models import Good, GoodProxy, Profile
 
 
 class FlatPageAdmin(FlatPageAdmin):
