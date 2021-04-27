@@ -134,6 +134,8 @@ class Good(models.Model):
     publish_date = models.DateField('Дата добавление товара в магазин',
                                     default=timezone.now)
     in_stock = models.PositiveIntegerField('В наличии', default=1)
+    is_archive = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=False)
 
     def __str__(self):
         """
@@ -142,10 +144,16 @@ class Good(models.Model):
         """
         return self.name
 
-
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class GoodProxy(Good):
+    class Meta:
+        proxy = True
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Архив товаров'
 
 
 @receiver(post_save, sender=Good)
