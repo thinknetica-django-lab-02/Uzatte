@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.db import models
+from django.db.models import QuerySet
+from django.http import HttpRequest
 
 from .models import Profile, Good, GoodProxy
 
@@ -30,17 +32,25 @@ class GoodAdmin(admin.ModelAdmin):
         }),
         ('Advanced', {
             'classes': ('collapse',),
-            'fields': ('image', 'publish_date'),
+            'fields': ('image', 'publish_date', 'is_publish'),
         })
     )
 
-    def make_archived(self, request, queryset):
+    def make_archived(self, request: HttpRequest, queryset: QuerySet) -> None:
         queryset.update(is_archive=True)
 
-    make_archived.short_description = "Move to archive"
-    actions = [make_archived]
+    def publish_good(self, request: HttpRequest, queryset: QuerySet) -> None:
+        queryset.update(is_publish=True)
 
-    def get_queryset(self, request):
+    def unpublish_good(self, request: HttpRequest, queryset: QuerySet) -> None:
+        queryset.update(is_publish=False)
+
+    publish_good.short_description = "Publish"
+    unpublish_good.short_description = "Unpublish"
+    make_archived.short_description = "Move to archive"
+    actions = [make_archived, publish_good, unpublish_good]
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
         return super().get_queryset(request).filter(is_archive=False)
 
 
@@ -60,18 +70,19 @@ class GoodProxyAdmin(admin.ModelAdmin):
         }),
         ('Advanced', {
             'classes': ('collapse',),
-            'fields': ('image', 'publish_date'),
+            'fields': ('image', 'publish_date', 'is_publish'),
         })
     )
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
         return super().get_queryset(request).filter(is_archive=True)
 
-    def remove_from_arhive(self, request, queryset):
+    def remove_from_archive(self, request: HttpRequest, queryset: QuerySet) -> None:
         queryset.update(is_archive=False)
 
-    remove_from_arhive.short_description = "Remove from archive"
-    actions = [remove_from_arhive]
+    remove_from_archive.short_description = "Remove from archive"
+
+    actions = [remove_from_archive]
 
 
 admin.site.unregister(FlatPage)

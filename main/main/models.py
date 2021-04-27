@@ -134,8 +134,8 @@ class Good(models.Model):
     publish_date = models.DateField('Дата добавление товара в магазин',
                                     default=timezone.now)
     in_stock = models.PositiveIntegerField('В наличии', default=1)
-    is_archive = models.BooleanField(default=False)
-    is_publish = models.BooleanField(default=False)
+    is_archive = models.BooleanField('В архиве', default=False)
+    is_publish = models.BooleanField('Статус публикации', default=False)
 
     def __str__(self):
         """
