@@ -193,7 +193,7 @@ class Profile(models.Model):
         return self.user.username
 
     @receiver(post_save, sender=User)
-    def create_user_profile(self, sender: Model, instance,
+    def create_user_profile(sender: Model, instance,
                             created: bool, **kwargs) -> None:
         """
         Function that create user extended user profile and connect it to
