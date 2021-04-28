@@ -39,6 +39,7 @@ class GoodList(ListView):
 
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
+        qs = qs.filter(is_publish=True)
         # Get filter parameter from url
         # and passes it got  QuerySet.Filter() method
         # with walrus operator
