@@ -69,6 +69,8 @@ class GoodDetail(DetailView):
     def get_context_data(self, **kwargs) -> Dict:
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
+        obj.view_count += 1
+        obj.save()
         obj_count_key: str = f"object_{obj.pk}_count"
         obj_count: int = cache.get(obj_count_key, 0)
         obj_count += 1
