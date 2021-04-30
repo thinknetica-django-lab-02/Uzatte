@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.db import models
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Model
 from django.http import HttpRequest
 
 from .models import Good, GoodProxy, Profile
@@ -16,12 +16,34 @@ class FlatPageAdmin(FlatPageAdmin):
     }
 
 
+class ArrayFieldListFilter(admin.SimpleListFilter):
+    """This is a list filter based on the values
+    from a Good model `tags` ArrayField. """
+
+    title = 'Tags'
+    parameter_name = 'tags'
+
+    def lookups(self, request: HttpRequest, model_admin: Model):
+
+        tags = Good.objects.values_list("tags", flat=True)
+        tags = [(tg, tg) for sublist in tags for tg in sublist if tg]
+        tags = sorted(set(tags))
+        return tags
+
+    def queryset(self, request: HttpRequest, queryset: QuerySet) -> QuerySet:
+
+        lookup_value = self.value()
+        if lookup_value:
+            queryset = queryset.filter(tags__contains=[lookup_value])
+        return queryset
+
+
 @admin.register(Good)
 class GoodAdmin(admin.ModelAdmin):
     """
     Admin class for Good
     """
-    list_filter = ('tags', 'publish_date')
+    list_filter = (ArrayFieldListFilter, 'publish_date')
     fieldsets = (
         ("General Info", {
             'fields': ('name', 'description', 'price', 'seller', 'in_stock')

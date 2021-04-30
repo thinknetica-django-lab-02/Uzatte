@@ -5,6 +5,7 @@ from asgiref.sync import sync_to_async
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import Group, User
+from django.contrib.postgres.fields import ArrayField
 from django.core import mail
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
@@ -28,26 +29,6 @@ def birth_date(value: datetime.date) -> None:
     difference_in_years = relativedelta(now_date, value).years
     if difference_in_years < 18:
         raise ValidationError('Возраст должен быть больше 18 лет')
-
-
-class Tag(models.Model):
-    """
-    Class that describes Tags. Tag is an identifier for categorizing,
-    describing, searching for data,
-    and setting the internal structure
-    """
-    name = models.CharField('Имя тэга', max_length=50, unique=True)
-
-    def __str__(self):
-        """
-        Method that return string name of tag
-        :return: str
-        """
-        return self.name
-
-    class Meta:
-        verbose_name = 'Тэг'
-        verbose_name_plural = 'Тэги'
 
 
 class Category(models.Model):
@@ -130,7 +111,8 @@ class Good(models.Model):
     # Set to CASCADE because delete of Manufacturer should entail
     # delete of all it's goods.
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag)
+    tags = ArrayField(
+            models.CharField(max_length=20, blank=True), blank=True)
     image = models.ImageField(upload_to='img', default='default.png')
     publish_date = models.DateField('Дата добавление товара в магазин',
                                     default=timezone.now)
