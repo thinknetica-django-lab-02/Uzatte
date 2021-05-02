@@ -119,6 +119,7 @@ class Good(models.Model):
     in_stock = models.PositiveIntegerField('В наличии', default=1)
     is_archive = models.BooleanField('В архиве', default=False)
     is_publish = models.BooleanField('Статус публикации', default=False)
+    view_count = models.IntegerField('Количество просмотров', default=0)
 
     def __str__(self):
         """
@@ -130,6 +131,18 @@ class Good(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class GoodCountView(models.Model):
+    """
+    View that display count of good views
+    """
+    name = models.CharField('Наименование товара', max_length=120, unique=True)
+    view_count = models.ImageField('Количество просмотров', default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'good_count_view'
 
 
 class GoodProxy(Good):

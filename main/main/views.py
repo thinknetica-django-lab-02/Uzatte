@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.postgres.search import SearchVector
 from django.core.cache import cache
 from django.db.models import QuerySet
 from django.http import HttpRequest
@@ -40,6 +41,9 @@ class GoodList(ListView):
     def get_queryset(self) -> QuerySet:
         qs = super().get_queryset()
         qs = qs.filter(is_publish=True)
+        if q := self.request.GET.get('q'):
+            qs = qs.annotate(search=SearchVector(
+                'name', 'description'),).filter(search__icontains=q)
         # Get filter parameter from url
         # and passes it got  QuerySet.Filter() method
         # with walrus operator
@@ -69,6 +73,8 @@ class GoodDetail(DetailView):
     def get_context_data(self, **kwargs) -> Dict:
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
+        obj.view_count += 1
+        obj.save()
         obj_count_key: str = f"object_{obj.pk}_count"
         obj_count: int = cache.get(obj_count_key, 0)
         obj_count += 1
