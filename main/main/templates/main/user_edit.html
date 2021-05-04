@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
 {% block title %} Профиль {% endblock %}
 {% block page_header %} Профиль {% endblock %}
 {% block page_content %}
