@@ -24,9 +24,12 @@ from . import views
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', views.index, name='index'),
+    path('contacts/', views.contacts),
+    path('delivery/', views.delivery),
+    path('about/', views.about),
     path('goods/', views.GoodList.as_view(),
          name='goods'),
     path('goods/add/', views.GoodCreate.as_view(), name='good-add'),

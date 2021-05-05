@@ -1,0 +1,11 @@
+{% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="Fast delivery at the day order">
+<meta name="keywords" content="E-Commerce, Market, Доставка, Быстро">
+{% endblock %}
+{% block title %} Доставка {% endblock %}
+{% block page_header %} Доставка {% endblock %}
+{% block page_content %}
+<p> Быстрая доставка товара день-в-день <p>
+<p> Стомость доставки - 500р.</p>
+{% endblock %}

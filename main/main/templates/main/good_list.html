@@ -1,4 +1,8 @@
 {% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="Different People. Different Interests. Different Goods. Find yours.">
+<meta name="keywords" content="E-Commerce, Market, Товары, Купить, Редактировать">
+{% endblock %}
 {% block title %} Список товаров {% endblock %}
 {% block page_content %}
 {% block page_header %} Товары {% endblock %}

@@ -1,5 +1,9 @@
 {% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
 {% load thumbnail %}
+{% block meta %}
+<meta name="description" content="We know everything about {{good.name}}. Check it out!">
+<meta name="keywords" content="E-Commerce, Market, Товары, Купить, {{good.name}}">
+{% endblock %}
 {% block title %} Список товаров {% endblock %}
 {% block page_content %}
 {% block page_header %} {{ good.name}} {% endblock %}

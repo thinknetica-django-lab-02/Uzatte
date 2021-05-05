@@ -158,3 +158,30 @@ def phone_number_confirmation(request: HttpRequest) -> HttpResponse:
         confirm_message = 'You have already confirmed you phone number'
         request.session['confirm_message'] = confirm_message
         return redirect('profile')
+
+
+def contacts(request: HttpRequest):
+    """
+    Function for render contacts page
+    :param request:
+    :return:
+    """
+    return render(request, 'main/contacts.html')
+
+
+def about(request: HttpRequest):
+    """
+    Function for render about page
+    :param request:
+    :return:
+    """
+    return render(request, 'main/about.html')
+
+
+def delivery(request: HttpRequest):
+    """
+    Function for render delivery page
+    :param request:
+    :return:
+    """
+    return render(request, 'main/delivery.html')

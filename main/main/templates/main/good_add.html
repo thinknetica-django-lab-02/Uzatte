@@ -1,4 +1,8 @@
 {% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="You can add any of possible good to our market. For free.">
+  <meta name="keywords" content="Добавить, Товар, E-Commerce, Market,">
+{% endblock %}
 {% block title %} Добавление товара {% endblock %}
 {% block page_header %} Добавление товара {% endblock %}
 {% block page_content %}
