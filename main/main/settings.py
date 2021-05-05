@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'phone_field',
     'django_redis',
     'channels',
+    'rest_framework',
 
 ]
 
@@ -92,6 +93,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'main.urls'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
 
 TEMPLATES = [
     {
