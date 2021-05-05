@@ -11,9 +11,11 @@
 {{ flatpage.content }}
 {% if turn_on_block %}
 {% load static %}
+
 <div itemscope="" itemtype="http://schema.org/Organization">
     <a itemprop="url" href="#">E-Commerce #1</a>
     <img itemprop="logo" src="{% static 'logo.png' %}">
 </div>
+
 {% endif %}
 {% endblock %}
