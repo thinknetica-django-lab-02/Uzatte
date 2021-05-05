@@ -1,0 +1,121 @@
+swagger: "2.0"
+info:
+  description: "API for E-Commerce #1"
+  version: "1.0.0"
+  title: "Open API that describes Goods"
+  contact:
+    email: "info@e-commerce.org"
+host: "example.com"
+schemes:
+- "http"
+paths:
+  /api/goods:
+    post:
+      summary: "Add a new good to the store"
+      description: ""
+      operationId: "addGood"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Good object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Good"
+      responses:
+        "405":
+          description: "Invalid input"
+  /api/goods/{good_id}:
+    put:
+      summary: "Change an existing good"
+      description: ""
+      operationId: "UpdateGood"
+      parameters:
+      - in: "path"
+        name: "good_id"
+        description: "Good object that needs to be added to the store"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      summary: "Delete an existing good"
+      description: ""
+      operationId: "DeleteGood"
+      parameters:
+      - in: "path"
+        name: "good_id"
+        description: "Good object that needs to be added to the store"
+        required: true
+        type: integer
+      responses:
+        "405":
+          description: "Invalid input"
+    
+definitions:
+  Manufacturer:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      description:
+        type: "string"
+  Seller:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      email:
+        type: "string"
+      address:
+        type: "string"
+  Category:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      description:
+        type: "string"
+  Good:
+    type: "object"
+    required:
+    - "name"
+    - "price"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "double"
+      tags:
+        type: "array"
+        items:
+          type: string
+      image:
+        type: "string"
+        format: "binary"
+      category:
+        $ref: "#/definitions/Category"
+      seller:
+        $ref: "#/definitions/Seller"
+  
