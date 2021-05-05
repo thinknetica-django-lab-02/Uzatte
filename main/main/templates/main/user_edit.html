@@ -1,4 +1,8 @@
 {% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="You can edit any information about your profile">
+<meta name="keywords" content="E-Commerce, Market">
+{% endblock %}
 {% block title %} Профиль {% endblock %}
 {% block page_header %} Профиль {% endblock %}
 {% block page_content %}

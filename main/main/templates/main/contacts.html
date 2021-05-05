@@ -1,0 +1,20 @@
+{% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="Call us for any question you have or send an email">
+  <meta name="keywords" content="E-Commerce, Market, Контакты">
+{% endblock %}
+{% block title %} Конакты {% endblock %}
+{% block page_header %} Контакты {% endblock %}
+{% block page_content %}
+<div itemscope itemtype="https://schema.org/Organization">
+  <p>Организация: <span itemprop="name">E-Commerce.org</span></p>
+  <p>Телефон: <span itemprop="telephone">+7 (555) 555-55-55</span></p>
+<div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+  <p>Страна: <span itemprop="addressCountry">Россия</span> </p>
+  <p>Почтовый индекс: <span itemprop="postalCode">123123</span></p>
+  <p>Город: <span itemprop="addressLocality">Москва</span></p>
+  <p>Адрес: <span itemprop="streetAddress">Уличная улица, дом 1</span></p>
+</div>
+  <p>Email: <span itemprop="email">info@e-commerce.org</span></p>
+</div>
+{% endblock %}

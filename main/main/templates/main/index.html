@@ -10,14 +10,12 @@
 {% block page_content%}
 {{ flatpage.content }}
 {% if turn_on_block %}
-<div>
-    <p> Сайт находится в разаботке</p>
+{% load static %}
+
+<div itemscope="" itemtype="http://schema.org/Organization">
+    <a itemprop="url" href="#">E-Commerce #1</a>
+    <img itemprop="logo" src="{% static 'logo.png' %}">
 </div>
+
 {% endif %}
-<div>
-    <p> Текущее время сервера: {% server_time %}</p>
-</div>
-<div>
-    <p> {{"Привет, мир!" | reverse }}</p>
-</div>
 {% endblock %}

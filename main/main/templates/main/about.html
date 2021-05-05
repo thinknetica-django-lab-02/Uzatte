@@ -1,0 +1,10 @@
+{% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="Welcome you on the best e-commerce ever. We selling best goods on best prices.">
+<meta name="keywords" content="E-Commerce, Market, О нас">
+{% endblock %}
+{% block title %} О нас {% endblock %}
+{% block page_header %} О нас {% endblock %}
+{% block page_content %}
+<p> Добро пожаловать на E-Commerce #1 - лучшую E-Commerce площадку. Мы продаем лучшие товары по лучшим ценам.
+{% endblock %}

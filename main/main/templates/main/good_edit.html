@@ -1,4 +1,8 @@
 {% extends request.mobile_version|yesno:'main/base_mobile.html,main/base.html' %}
+{% block meta %}
+<meta name="description" content="You can edit detail information about {{good.name}}">
+<meta name="keywords" content="E-Commerce, Market, Товары, Купить, {{good.name}}, редактировать">
+{% endblock %}
 {% block title %} Редактирование {{ good.name }} {% endblock %}
 {% block page_header %} Редактирование {{ good.name }} {% endblock %}
 {% block page_content %}
