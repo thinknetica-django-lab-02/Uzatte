@@ -19,6 +19,7 @@ from django.utils.html import strip_tags
 from phone_field import PhoneField
 
 from .tasks import send_mail_notification
+from django.urls import reverse
 
 
 def birth_date(value: datetime.date) -> None:
@@ -127,6 +128,9 @@ class Good(models.Model):
         :return: str
         """
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('good-detail', args=[str(self.id)])
 
     class Meta:
         verbose_name = 'Товар'

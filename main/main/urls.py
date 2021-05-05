@@ -14,14 +14,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.http import HttpResponse
 from django.urls import include, path
+
+from .sitemaps import GoodSitemap
 
 from . import views
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+sitemaps = {
+    'goods': GoodSitemap,
+}
+
+robots = """
+User-Agent: *\nDisallow: /admin\nSitemap /sitemap.xml
+"""
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -38,4 +51,7 @@ urlpatterns = [
     path('accounts/profile/', views.ProfileUpdate.as_view(), name='profile'),
     path('accounts/profile/phone_confirm', views.phone_number_confirmation,
          name='phone-confirm'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^robots.txt', lambda x: HttpResponse(robots, content_type="text/plain"),
+        name="robots_file"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
