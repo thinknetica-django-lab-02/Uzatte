@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'django_redis',
     'channels',
     'rest_framework',
+    'django_filters',
 
 ]
 
