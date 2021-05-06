@@ -21,10 +21,15 @@ from django.contrib.sitemaps.views import sitemap
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import HttpResponse
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
 from .sitemaps import GoodSitemap
 
 from . import views
+from . import api
+
+router = DefaultRouter()
+router.register('goods', api.GoodViewSet)
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -54,4 +59,5 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots.txt', lambda x: HttpResponse(robots, content_type="text/plain"),
         name="robots_file"),
+    path('api/', include(router.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
