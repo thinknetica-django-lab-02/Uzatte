@@ -14,5 +14,5 @@ class GoodSerializer(ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ('name', 'price', 'category', 'manufacturer', 'seller', 'tags')
+        fields = ('name', 'price', 'category', 'manufacturer', 'seller', 'tags', 'description')
         depth = 1
