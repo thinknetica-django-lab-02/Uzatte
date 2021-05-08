@@ -22,9 +22,15 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import HttpResponse
 from django.urls import include, path
 
+from rest_framework.routers import DefaultRouter
+
+from . import api
+from . import views
 from .sitemaps import GoodSitemap
 
-from . import views
+
+router = DefaultRouter()
+router.register('goods', api.GoodViewSet)
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -51,7 +57,9 @@ urlpatterns = [
     path('accounts/profile/', views.ProfileUpdate.as_view(), name='profile'),
     path('accounts/profile/phone_confirm', views.phone_number_confirmation,
          name='phone-confirm'),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots.txt', lambda x: HttpResponse(robots, content_type="text/plain"),
         name="robots_file"),
+    path('api/', include(router.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

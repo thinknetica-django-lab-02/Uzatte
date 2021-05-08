@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.db import models
-from django.db.models import QuerySet, Model
+from django.db.models import Model, QuerySet
 from django.http import HttpRequest
 
 from .models import Good, GoodProxy, Profile
