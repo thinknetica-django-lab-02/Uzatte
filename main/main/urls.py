@@ -27,7 +27,7 @@ from rest_framework.routers import DefaultRouter
 from . import api
 from . import views
 from .sitemaps import GoodSitemap
-
+from rest_framework.authtoken import views as authviews
 
 router = DefaultRouter()
 router.register('goods', api.GoodViewSet)
@@ -63,3 +63,6 @@ urlpatterns = [
         name="robots_file"),
     path('api/', include(router.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [
+    path('api-token-auth/', authviews.obtain_auth_token)
+]
